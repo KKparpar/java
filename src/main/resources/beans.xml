@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    配置 com.itheima.factory.MyBeanFatory1-->
+    <bean id="userDao1" class="com.itheima.factory.MyBeanFatory1" factory-method="userDao">
+        <constructor-arg name="name" value="haohao"/>
+        <constructor-arg name="age" value="18"/>
+    </bean>
+<!--    使用 factory-method="userDao" 指定方法-->
+<!--    使用 constructor-arg 来指定参数-->
+
+<!--    实例工厂方法 配置工厂对象-->
+    <bean id="myBeanFactory2" class="com.itheima.factory.MyBeanFactory2"></bean>
+<!--    配置工厂返回值UserDao-->
+    <bean id="userDao2" factory-bean="myBeanFactory2" factory-method="userDao">
+        <constructor-arg name="name" value="haohao"/>
+        <constructor-arg name="age" value="20"/>
+    </bean>
+<!--    使用 constructor-arg 来指定参数-->
+
+<!--    配置bean（MyBeanFatory3）-->
+    <bean id="userDao3" class="com.itheima.factory.MyBeanFatory3"></bean>
+
+
+<!--    &lt;!&ndash;    配置UserServiceImpl&ndash;&gt;-->
+<!--        <bean id="userService" class="com.itheima.service.impl.UserServiceImpl">-->
+<!--    &lt;!&ndash;        配置有参构造函数的参数，name配置形参，value配置传入的值&ndash;&gt;-->
+<!--            <constructor-arg name="name" value="haohao"></constructor-arg>-->
+<!--            <constructor-arg name="age" value="10"></constructor-arg>-->
+<!--            <property name="userDao" ref="userDao"></property>-->
+<!--        </bean>-->
+
+<!--    配置UserDaoImpl-->
+    <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl"></bean>
+</beans>

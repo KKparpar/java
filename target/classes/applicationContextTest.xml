@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:haohao="http://www.itheima.com/haohao"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/beans/spring-mvc.xsd
+       http://www.itheima.com/haohao
+       http://www.itheima.com/haohao/haohao-annotation.xsd">
+
+    <bean id="userService" class="com.itheima.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"></property>
+        <property name="userMapper" ref="userMapper"></property>
+    </bean>
+<!--    需要用 init-method 指定执行方法-->
+    <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl" init-method="init"></bean>
+
+<!--        配置bean - 手动装配 -->
+<!--        <bean id="userService" class="com.itheima.service.impl.UserServiceImpl">-->
+<!--    &lt;!&ndash;        配置注入的 stringList&ndash;&gt;-->
+<!--            <property name="stringList">-->
+<!--                <list>-->
+<!--                    <value>aaa</value>-->
+<!--                    <value>bbb</value>-->
+<!--                </list>-->
+<!--            </property>-->
+<!--    &lt;!&ndash;        配置注入的 userDaoList &ndash;&gt;-->
+<!--            <property name="userDaoList">-->
+<!--                <list>-->
+<!--    &lt;!&ndash;                直接注入bean&ndash;&gt;-->
+<!--                    <bean class="com.itheima.dao.impl.UserDaoImpl"/>-->
+<!--                    <bean class="com.itheima.dao.impl.UserDaoImpl"/>-->
+<!--    &lt;!&ndash;                或者通过先在外部注入bean，在通过 ref 来外部引用&ndash;&gt;-->
+<!--                    <ref bean="userDao3"></ref>-->
+<!--                </list>-->
+<!--            </property>-->
+<!--        </bean>-->
+<!--    -->
+<!--        <bean id="userDao3" class="com.itheima.dao.impl.UserDaoImpl"></bean>-->
+
+<!--配置bean - 自动装配-->
+<!--    <bean id="userService" class="com.itheima.service.impl.UserServiceImpl" autowire="byName"></bean>-->
+<!--    <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl"></bean>-->
+<!--    autowire="byName" ：id需要和实现类的set方法名称保持一致   例如：setUserdao-->
+<!--    autowire="byType" ： 根据类型装配（UserDaoImpl）-->
+
+<!--    <beans>标签-->
+<!--    开发环境的bean-->
+<!--    <beans profile="dev">-->
+<!--        <bean id="userService" class="com.itheima.service.impl.UserServiceImpl"></bean>-->
+<!--    </beans>-->
+<!--    测试环境的bean-->
+<!--    <beans profile="test">-->
+<!--        <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl"></bean>-->
+<!--    </beans>-->
+
+<!--    通过import 引入其他模块的配置文件-->
+<!--    <import resource="applicationContext-orders.xml"></import>-->
+<!--    <import resource="applicationContext-user.xml"></import>-->
+
+<!--    使用alias指定别名 , name 需要指定 bean 的 id-->
+<!--    <bean id="userService" class="com.itheima.service.impl.UserServiceImpl"></bean>-->
+<!--    <alias name="userService" alias="xxx"></alias>-->
+<!--    <alias name="userService" alias="yyy"></alias>-->
+
+<!--    需要提前在beans引入第三方坐标，使用标签-->
+<!--    <context:property-placeholder></context:property-placeholder>-->
+<!--    <mvc:annotation-driven></mvc:annotation-driven>-->
+
+<!--    配置数据源信息-->
+    <!--
+    <bean  id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/mybatis"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="root"></property>
+    </bean>
+    -->
+
+<!--    配置Connection-->
+<!--    <bean id="clazz" class="java.lang.Class" factory-method="forName">-->
+<!--        需要指定方法，和参数-->
+<!--
+        <constructor-arg name="className" value="com.mysql.cj.jdbc.Driver"></constructor-arg>
+    </bean>
+    <bean id="connection" class="java.sql.DriverManager" factory-method="getConnection" scope="prototype">
+        <constructor-arg name="url" value="jdbc:mysql://localhost:3306/tlias"></constructor-arg>
+        <constructor-arg name="user" value="root"></constructor-arg>
+        <constructor-arg name="password" value="ke136136"></constructor-arg>
+    </bean>
+    -->
+
+<!--    配置日期对象-->
+    <bean id="simpleDateFormat" class="java.text.SimpleDateFormat">
+<!--        需要配置日期格式-->
+        <constructor-arg name="pattern" value="yyyy-MM-dd HH:mm:ss"></constructor-arg>
+    </bean>
+<!--    配置pa - 非静态工厂方式-->
+    <bean id="data" factory-bean="simpleDateFormat" factory-method="parse">
+        <constructor-arg name="source" value="2023-08-27 07:20:00"></constructor-arg>
+    </bean>
+
+<!--    配置mybatis-->
+<!--
+    <bean id="in" class="org.apache.ibatis.io.Resources" factory-method="getResourceAsStream">
+        <constructor-arg name="resource" value="mybatis-config.xml"></constructor-arg>
+    </bean>
+    <bean id="builder" class="org.apache.ibatis.session.SqlSessionFactoryBuilder"></bean>
+    <bean id="sqlSessionFactory" factory-bean="builder" factory-method="build">
+        <constructor-arg name="inputStream" ref="in"></constructor-arg>
+    </bean>
+-->
+
+<!--    配置 com.itheima.processor.MyBeanFactoryPostProcessor-->
+    <bean id="beanFactoryPostProcessor" class="com.itheima.processor.MyBeanFactoryPostProcessor"></bean>
+
+<!--    配置 com.itheima.processor.MyBeanDefinitionRegistryPostProcessor-->
+    <bean id="beanDefinitionRegistryPostProcessor" class="com.itheima.processor.MyBeanDefinitionRegistryPostProcessor"></bean>
+
+<!--    配置 MyComponentBeanFactoryPostProcessor-->
+    <bean id="myComponentBeanFactoryPostProcessor" class="com.itheima.processor.MyComponentBeanFactoryPostProcessor"></bean>
+
+<!--    配置 MyBeanPostProcessor-->
+    <bean id="myBeanPostProcessor" class="com.itheima.processor.MyBeanPostProcessor"></bean>
+
+<!--    配置 com.itheima.processor.TimeLogBeanPostProcessor-->
+    <bean id="timeLogBeanPostProcessor" class="com.itheima.processor.TimeLogBeanPostProcessor"></bean>
+
+<!--    <bean id="in" class="org.apache.ibatis.io.Resources" factory-method="getResourceAsStream">-->
+<!--        <constructor-arg name="resource" value="mybatis-config.xml"></constructor-arg>-->
+<!--    </bean>-->
+<!--    <bean id="builder" class="org.apache.ibatis.session.SqlSessionFactoryBuilder"></bean>-->
+<!--    <bean id="sqlSessionFactory" factory-bean="builder" factory-method="build">-->
+<!--        <constructor-arg name="inputStream" ref="in"></constructor-arg>-->
+<!--    </bean>-->
+
+<!--    配置数据源-->
+<!--
+    <bean  id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/db03"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="ke136136"></property>
+    </bean>
+-->
+    <!--    配置sqlSessionFactoryBean,作用：SqlSessionFactoryBean存储到spring容器-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+<!--        传入数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+<!--    配置MapperScannerConfigurer,作用：扫描指定的包，产生Mapper对象存储到spring容器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.itheima.mapper"></property>
+    </bean>
+
+    <!--    加载 properties 文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--    配置数据源-->
+    <bean  id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--    使用自定义命名空间的标签-->
+    <haohao:annotation-driven></haohao:annotation-driven>
+
+
+</beans>
